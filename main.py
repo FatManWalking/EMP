@@ -23,7 +23,7 @@ from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.profilers import SimpleProfiler
 
 # %%
-args_dict = take_hp("configs/reduced_json.yml")
+args_dict = take_hp("configs/baseline.yml")
 
 pl.seed_everything(args_dict["random_seed"], workers=True)
 # %%
@@ -40,8 +40,12 @@ args_dict["num_features"] = dataset.num_features
 filename, filepath = save_config(args_dict)
 # %%
 split_train = int(dataset.len() * args_dict["split_ratio"])
-split_val = int(dataset.len() * 1 - args_dict["split_ratio"] / args_dict["test_ratio"])
+split_val = int((dataset.len() - split_train) * args_dict["test_ratio"])
 split_test = dataset.len() - split_val - split_train
+
+print(
+    f"Hole: {dataset.len()}, Train: {split_train}, Val: {split_val}, Test: {split_test}"
+)
 # %%
 train_data, eval_data, test_data = random_split(
     dataset,
@@ -83,7 +87,7 @@ if args_dict["resume_from_checkpoint"]:
 
 if args_dict["logging"]:
     logger = TensorBoardLogger(
-        save_dir=args_dict["log_path"], version=1, name="lightning_logs"
+        save_dir=args_dict["log_path"], name=args_dict["experiment_name"]
     )
 else:
     assert False, "No logger defined"
@@ -108,4 +112,4 @@ trainer.fit(model, train_dataloaders=train_loader, val_dataloaders=val_loader)
 # Test the model [ONLY USE AFTER HPT SEARCH IS DONE]
 trainer.test(model, dataloaders=test_loader)
 
-torch.save(model.state_dict(), args_dict["output_path"])
+torch.save(model.state_dict(), f"{args_dict['output_path']}/model.pt")

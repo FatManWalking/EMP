@@ -48,7 +48,7 @@ nhid: 128
 # LR Schedule to adept over time
 lr_scheduler_type: "linear"
 # Epochs
-epochs: 75
+epochs: 500
 # Early stopping
 patience: 100
 # Custom Trainer
