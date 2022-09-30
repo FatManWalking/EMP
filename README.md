@@ -13,7 +13,7 @@ For this different empirical tests are conducted to show validity, reliability a
 
 ## Installation
 
-Please clone the repository and install the necassary dependencies with 'conda
-install --name HGP-SL --file enviroment.yml'
+Please clone the repository and install the necassary dependencies with `conda
+install --name HGP-SL --file enviroment.yml`
 
 The seen enviroment was created in Windows 10 WSL Ubuntu 20.08
